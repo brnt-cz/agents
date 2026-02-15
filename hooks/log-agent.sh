@@ -44,28 +44,19 @@ case "$EVENT" in
     ;;
 
   PostToolUse)
-    TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"')
-    AGENT_TYPE=$(echo "$INPUT" | jq -r '.tool_input.subagent_type // "unknown"')
-    DESCRIPTION=$(echo "$INPUT" | jq -r '.tool_input.description // ""')
-    # Result can be large, truncate to 2000 chars
-    RESULT=$(echo "$INPUT" | jq -r '.tool_result // ""' | head -c 2000)
-
-    jq -n -c \
+    # Build JSON directly from input — avoids shell variable limits for large results
+    echo "$INPUT" | jq -c \
       --arg ts "$TIMESTAMP" \
       --arg event "$EVENT" \
       --arg session "$SESSION_ID" \
-      --arg tool "$TOOL_NAME" \
-      --arg atype "$AGENT_TYPE" \
-      --arg desc "$DESCRIPTION" \
-      --arg result "$RESULT" \
       '{
         timestamp: $ts,
         event: $event,
         session_id: $session,
-        tool_name: $tool,
-        agent_type: $atype,
-        description: $desc,
-        result: $result
+        tool_name: (.tool_name // "unknown"),
+        agent_type: (.tool_input.subagent_type // "unknown"),
+        description: (.tool_input.description // ""),
+        result: ([.tool_response.content[]? | select(.type == "text") | .text] | join("\n"))
       }' >> "$LOG_FILE"
     ;;
 
