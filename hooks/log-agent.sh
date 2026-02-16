@@ -62,7 +62,10 @@ case "$EVENT" in
 
   SubagentStart)
     AGENT_ID=$(echo "$INPUT" | jq -r '.agent_id // "unknown"')
-    AGENT_TYPE=$(echo "$INPUT" | jq -r '.agent_type // "unknown"')
+    AGENT_TYPE=$(echo "$INPUT" | jq -r '.agent_type // ""')
+
+    # Skip internal subagents (Bash, Read, etc.) — they have no agent_type
+    [[ -z "$AGENT_TYPE" ]] && exit 0
 
     jq -n -c \
       --arg ts "$TIMESTAMP" \
@@ -81,7 +84,10 @@ case "$EVENT" in
 
   SubagentStop)
     AGENT_ID=$(echo "$INPUT" | jq -r '.agent_id // "unknown"')
-    AGENT_TYPE=$(echo "$INPUT" | jq -r '.agent_type // "unknown"')
+    AGENT_TYPE=$(echo "$INPUT" | jq -r '.agent_type // ""')
+
+    # Skip internal subagents (Bash, Read, etc.) — they have no agent_type
+    [[ -z "$AGENT_TYPE" ]] && exit 0
 
     jq -n -c \
       --arg ts "$TIMESTAMP" \
