@@ -7,7 +7,7 @@ PROJECT_DIR="/www/brnt/agents"
 # Check if already running
 if lsof -ti:$PORT >/dev/null 2>&1; then
   # Server already running, just open the app
-  google-chrome --app="http://localhost:$PORT" 2>/dev/null &
+  google-chrome --app="http://localhost:$PORT" --class=agent-board 2>/dev/null &
   exit 0
 fi
 
@@ -24,7 +24,7 @@ for i in $(seq 1 30); do
 done
 
 # Open Chrome in app mode
-google-chrome --app="http://localhost:$PORT" 2>/dev/null &
+google-chrome --app="http://localhost:$PORT" --class=agent-board 2>/dev/null &
 
 # Keep server running until Chrome window closes
 wait $SERVER_PID
