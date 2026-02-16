@@ -7,6 +7,10 @@ const props = defineProps<{
   group: AgentGroup
 }>()
 
+const emit = defineEmits<{
+  dismiss: [id: string]
+}>()
+
 const expanded = ref(false)
 
 const agentStyle = computed(() => {
@@ -49,6 +53,22 @@ const statsFormatted = computed(() => {
 const promptText = computed(() => props.group.dispatch?.prompt || '')
 const resultText = computed(() => props.group.result?.result || '')
 const resultHtml = computed(() => resultText.value ? renderMarkdown(resultText.value) : '')
+
+function saveResult() {
+  if (!resultText.value) return
+  const blob = new Blob([resultText.value], { type: 'text/markdown' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  const name = (props.group.description || props.group.agent_type || 'result')
+    .replace(/[^a-zA-Z0-9-_ ]/g, '')
+    .replace(/\s+/g, '-')
+    .toLowerCase()
+    .slice(0, 50)
+  a.download = `${name}.md`
+  a.click()
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
@@ -108,6 +128,18 @@ const resultHtml = computed(() => resultText.value ? renderMarkdown(resultText.v
       >
         {{ statsFormatted }}
       </span>
+
+      <!-- Dismiss button -->
+      <button
+        class="shrink-0 p-1 rounded text-slate-600 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+        :class="{ 'ml-auto': !statsFormatted }"
+        title="Dismiss"
+        @click.stop="emit('dismiss', group.id)"
+      >
+        <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+        </svg>
+      </button>
     </div>
 
     <!-- Expanded content -->
@@ -120,7 +152,18 @@ const resultHtml = computed(() => resultText.value ? renderMarkdown(resultText.v
 
       <!-- Result (markdown) -->
       <div v-if="resultText" class="mt-2">
-        <div class="text-[10px] text-slate-600 font-bold tracking-wider mb-1">RESULT</div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-[10px] text-slate-600 font-bold tracking-wider">RESULT</span>
+          <button
+            class="text-[10px] text-slate-600 hover:text-slate-300 transition-colors cursor-pointer"
+            title="Save as .md"
+            @click="saveResult"
+          >
+            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+            </svg>
+          </button>
+        </div>
         <div
           class="md-result text-xs leading-relaxed bg-slate-950/50 rounded px-3 py-2 max-h-64 overflow-y-auto"
           v-html="resultHtml"

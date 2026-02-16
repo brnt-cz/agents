@@ -15,7 +15,7 @@ const {
   clearEvents,
 } = useAgentEvents()
 
-const { timelineItems } = useGroupedEvents(filteredEvents)
+const { timelineItems, dismissGroup } = useGroupedEvents(filteredEvents)
 const eventCount = computed(() => filteredEvents.value.length)
 </script>
 
@@ -94,7 +94,7 @@ const eventCount = computed(() => filteredEvents.value.length)
 
     <!-- Timeline -->
     <main class="flex-1 overflow-hidden p-4">
-      <AgentTimeline :items="timelineItems" />
+      <AgentTimeline :items="timelineItems" @dismiss-group="dismissGroup" />
     </main>
   </div>
 </template>
