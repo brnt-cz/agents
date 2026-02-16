@@ -41,33 +41,45 @@ const eventCount = computed(() => filteredEvents.value.length)
 
         <div class="flex items-center gap-2">
           <!-- Session filter -->
-          <select
-            v-if="sessions.length > 1"
-            v-model="filterSession"
-            class="text-xs bg-slate-800 text-slate-300 border border-slate-700 rounded px-2 py-1"
-          >
-            <option :value="null">All sessions</option>
-            <option v-for="s in sessions" :key="s" :value="s">
-              {{ s.slice(0, 12) }}…
-            </option>
-          </select>
+          <div v-if="sessions.length > 1" class="relative">
+            <svg class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 size-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+            <select
+              v-model="filterSession"
+              class="appearance-none text-xs bg-slate-800/80 text-slate-300 border border-slate-700/60 rounded-lg pl-2.5 pr-7 py-1.5 outline-none transition-all hover:border-slate-600 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/25 cursor-pointer"
+            >
+              <option :value="null">All sessions</option>
+              <option v-for="s in sessions" :key="s" :value="s">
+                {{ s.slice(0, 12) }}…
+              </option>
+            </select>
+          </div>
 
           <!-- Agent type filter -->
-          <select
-            v-if="agentTypes.length > 1"
-            v-model="filterAgentType"
-            class="text-xs bg-slate-800 text-slate-300 border border-slate-700 rounded px-2 py-1"
-          >
-            <option :value="null">All types</option>
-            <option v-for="t in agentTypes" :key="t" :value="t">
-              {{ t }}
-            </option>
-          </select>
+          <div v-if="agentTypes.length > 1" class="relative">
+            <svg class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 size-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+            <select
+              v-model="filterAgentType"
+              class="appearance-none text-xs bg-slate-800/80 text-slate-300 border border-slate-700/60 rounded-lg pl-2.5 pr-7 py-1.5 outline-none transition-all hover:border-slate-600 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/25 cursor-pointer"
+            >
+              <option :value="null">All types</option>
+              <option v-for="t in agentTypes" :key="t" :value="t">
+                {{ t }}
+              </option>
+            </select>
+          </div>
 
+          <!-- Clear button -->
           <button
-            class="text-[11px] text-slate-500 hover:text-red-400 transition-colors cursor-pointer"
+            class="inline-flex items-center gap-1.5 text-[11px] text-slate-500 border border-transparent rounded-lg px-2.5 py-1.5 transition-all hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 active:scale-95 cursor-pointer"
             @click="clearEvents"
           >
+            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+            </svg>
             Clear
           </button>
         </div>
