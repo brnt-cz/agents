@@ -68,7 +68,7 @@ export default function agentEventsPlugin(): Plugin {
         broadcastNewEvents()
       })
 
-      // GET /api/events - return all events as JSON array
+      // SSE stream endpoint
       server.middlewares.use('/api/events/stream', (req, res) => {
         res.writeHead(200, {
           'Content-Type': 'text/event-stream',
@@ -76,6 +76,7 @@ export default function agentEventsPlugin(): Plugin {
           Connection: 'keep-alive',
           'Access-Control-Allow-Origin': '*',
         })
+        res.flushHeaders()
 
         const content = fs.existsSync(LOG_FILE)
           ? fs.readFileSync(LOG_FILE, 'utf-8')

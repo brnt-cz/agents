@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
-import type { AgentEvent } from '../composables/useAgentEvents'
+import type { TimelineItem } from '../composables/useGroupedEvents'
 import AgentCard from './AgentCard.vue'
+import AgentGroupCard from './AgentGroupCard.vue'
 
 const props = defineProps<{
-  events: AgentEvent[]
+  items: TimelineItem[]
 }>()
 
 const container = ref<HTMLElement | null>(null)
 const autoScroll = ref(true)
 
 watch(
-  () => props.events.length,
+  () => props.items.length,
   async () => {
     if (!autoScroll.value || !container.value) return
     await nextTick()
@@ -22,7 +23,6 @@ watch(
 function onScroll() {
   if (!container.value) return
   const { scrollTop, scrollHeight, clientHeight } = container.value
-  // If user scrolled up more than 100px from bottom, disable auto-scroll
   autoScroll.value = scrollHeight - scrollTop - clientHeight < 100
 }
 </script>
@@ -47,7 +47,7 @@ function onScroll() {
       class="flex-1 overflow-y-auto space-y-2 pr-1"
       @scroll="onScroll"
     >
-      <div v-if="events.length === 0" class="flex items-center justify-center h-full">
+      <div v-if="items.length === 0" class="flex items-center justify-center h-full">
         <div class="text-center text-slate-600">
           <svg class="mx-auto mb-3 size-10 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M2 12 7 2" /><path d="m7 12 5-10" /><path d="m12 12 5-10" /><path d="m17 12 5-10" /><circle cx="4.5" cy="18" r="2.5" /><circle cx="12" cy="18" r="2.5" /><circle cx="19.5" cy="18" r="2.5" /><path d="M4.5 15.5V12" /><path d="M12 15.5V12" /><path d="M19.5 15.5V12" />
@@ -57,11 +57,16 @@ function onScroll() {
         </div>
       </div>
 
-      <AgentCard
-        v-for="(event, i) in events"
-        :key="i"
-        :event="event"
-      />
+      <template v-for="(item, i) in items" :key="i">
+        <AgentGroupCard
+          v-if="item.type === 'group'"
+          :group="item.group"
+        />
+        <AgentCard
+          v-else
+          :event="item.event"
+        />
+      </template>
     </div>
   </div>
 </template>

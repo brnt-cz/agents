@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { AgentEvent } from '../composables/useAgentEvents'
+import { renderMarkdown } from '../composables/useMarkdown'
 
 const props = defineProps<{
   event: AgentEvent
@@ -63,6 +64,27 @@ const fullText = computed(() => {
 
 const hasExpandableText = computed(() => {
   return fullText.value.length > 200
+})
+
+const statsFormatted = computed(() => {
+  const parts: string[] = []
+  const e = props.event
+  if (e.duration_ms != null) {
+    const sec = e.duration_ms / 1000
+    parts.push(sec >= 10 ? `${sec.toFixed(1)}s` : `${sec.toFixed(1)}s`)
+  }
+  if (e.total_tokens != null) {
+    const k = e.total_tokens / 1000
+    parts.push(k >= 10 ? `${Math.round(k)}k tokens` : `${k.toFixed(1)}k tokens`)
+  }
+  return parts.join(' · ')
+})
+
+const isResult = computed(() => props.event.event === 'PostToolUse' && !!props.event.result)
+
+const resultHtml = computed(() => {
+  if (!isResult.value) return ''
+  return renderMarkdown(props.event.result!)
 })
 
 const isCompact = computed(() => {
@@ -145,6 +167,12 @@ const isCompact = computed(() => {
         >
           #{{ event.agent_id.slice(0, 8) }}
         </span>
+        <span
+          v-if="statsFormatted"
+          class="ml-auto text-[11px] text-slate-500 font-mono"
+        >
+          {{ statsFormatted }}
+        </span>
       </div>
 
       <!-- Description -->
@@ -155,8 +183,24 @@ const isCompact = computed(() => {
         {{ event.description }}
       </p>
 
-      <!-- Prompt / Result preview -->
-      <div v-if="fullText" class="mt-1.5">
+      <!-- Result as markdown -->
+      <div v-if="isResult" class="mt-1.5">
+        <div
+          class="md-result text-xs leading-relaxed bg-slate-950/50 rounded px-3 py-2 max-h-48 overflow-y-auto"
+          :class="{ 'max-h-none': expanded }"
+          v-html="resultHtml"
+        />
+        <button
+          v-if="hasExpandableText"
+          class="text-[11px] text-slate-500 hover:text-slate-300 mt-1 transition-colors cursor-pointer"
+          @click="expanded = !expanded"
+        >
+          {{ expanded ? '← Collapse' : 'Expand →' }}
+        </button>
+      </div>
+
+      <!-- Prompt / other text as pre -->
+      <div v-else-if="fullText" class="mt-1.5">
         <pre
           class="text-xs text-slate-400 whitespace-pre-wrap break-words font-mono leading-relaxed bg-slate-950/50 rounded px-3 py-2 max-h-48 overflow-y-auto"
           :class="{ 'max-h-none': expanded }"
