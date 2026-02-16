@@ -10,6 +10,8 @@ export interface AgentEvent {
   prompt?: string
   result?: string
   agent_id?: string
+  duration_ms?: number | null
+  total_tokens?: number | null
   _clear?: boolean
 }
 

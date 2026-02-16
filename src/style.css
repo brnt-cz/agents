@@ -53,3 +53,134 @@ body {
 *::-webkit-scrollbar-thumb:hover {
   background: var(--color-slate-600);
 }
+
+/* Markdown result container */
+.md-result {
+  color: var(--color-slate-300);
+}
+
+.md-result h1 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-slate-100);
+  margin: 0.75rem 0 0.375rem;
+  line-height: 1.4;
+}
+
+.md-result h2 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-slate-200);
+  margin: 0.625rem 0 0.25rem;
+  line-height: 1.4;
+}
+
+.md-result h3 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-slate-200);
+  margin: 0.5rem 0 0.25rem;
+  line-height: 1.4;
+}
+
+.md-result p {
+  margin: 0.375rem 0;
+}
+
+.md-result ul, .md-result ol {
+  margin: 0.375rem 0;
+  padding-left: 1.25rem;
+}
+
+.md-result ul {
+  list-style-type: disc;
+}
+
+.md-result ol {
+  list-style-type: decimal;
+}
+
+.md-result li {
+  margin: 0.125rem 0;
+}
+
+.md-result code {
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
+  font-size: 0.75rem;
+  background: var(--color-slate-800);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  color: var(--color-emerald-400);
+}
+
+.md-result pre {
+  margin: 0.5rem 0;
+  background: var(--color-slate-900);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+  overflow-x: auto;
+}
+
+.md-result pre code {
+  background: transparent;
+  padding: 0;
+  color: var(--color-slate-300);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.md-result table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+  font-size: 0.75rem;
+}
+
+.md-result th, .md-result td {
+  border: 1px solid var(--color-slate-700);
+  padding: 0.375rem 0.5rem;
+  text-align: left;
+}
+
+.md-result th {
+  background: var(--color-slate-800);
+  font-weight: 600;
+  color: var(--color-slate-200);
+}
+
+.md-result strong {
+  font-weight: 600;
+  color: var(--color-slate-200);
+}
+
+.md-result a {
+  color: var(--color-blue-400);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.md-result a:hover {
+  color: var(--color-blue-300);
+}
+
+.md-result hr {
+  border: none;
+  border-top: 1px solid var(--color-slate-700);
+  margin: 0.75rem 0;
+}
+
+.md-result blockquote {
+  border-left: 3px solid var(--color-slate-600);
+  padding-left: 0.75rem;
+  margin: 0.5rem 0;
+  color: var(--color-slate-400);
+  font-style: italic;
+}
+
+.md-result > *:first-child {
+  margin-top: 0;
+}
+
+.md-result > *:last-child {
+  margin-bottom: 0;
+}

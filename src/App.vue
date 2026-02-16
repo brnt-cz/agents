@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AgentTimeline from './components/AgentTimeline.vue'
+import SessionSummary from './components/SessionSummary.vue'
 import { useAgentEvents } from './composables/useAgentEvents'
+import { useGroupedEvents } from './composables/useGroupedEvents'
 
 const {
   filteredEvents,
@@ -13,6 +15,7 @@ const {
   clearEvents,
 } = useAgentEvents()
 
+const { timelineItems } = useGroupedEvents(filteredEvents)
 const eventCount = computed(() => filteredEvents.value.length)
 </script>
 
@@ -86,9 +89,12 @@ const eventCount = computed(() => filteredEvents.value.length)
       </div>
     </header>
 
+    <!-- Session Summary -->
+    <SessionSummary :events="filteredEvents" />
+
     <!-- Timeline -->
     <main class="flex-1 overflow-hidden p-4">
-      <AgentTimeline :events="filteredEvents" />
+      <AgentTimeline :items="timelineItems" />
     </main>
   </div>
 </template>

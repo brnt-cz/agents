@@ -56,7 +56,10 @@ case "$EVENT" in
         tool_name: (.tool_name // "unknown"),
         agent_type: (.tool_input.subagent_type // "unknown"),
         description: (.tool_input.description // ""),
-        result: ([.tool_response.content[]? | select(.type == "text") | .text] | join("\n"))
+        result: ([.tool_response.content[]? | select(.type == "text") | .text] | join("\n")),
+        duration_ms: (.tool_response.totalDurationMs // null),
+        total_tokens: (.tool_response.totalTokens // null),
+        agent_id: (.tool_response.agentId // null)
       }' >> "$LOG_FILE"
     ;;
 
