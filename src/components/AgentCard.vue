@@ -87,6 +87,22 @@ const resultHtml = computed(() => {
   return renderMarkdown(props.event.result!)
 })
 
+function saveResult() {
+  if (!props.event.result) return
+  const blob = new Blob([props.event.result], { type: 'text/markdown' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  const name = (props.event.description || props.event.agent_type || 'result')
+    .replace(/[^a-zA-Z0-9-_ ]/g, '')
+    .replace(/\s+/g, '-')
+    .toLowerCase()
+    .slice(0, 50)
+  a.download = `${name}.md`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 const isCompact = computed(() => {
   const e = props.event
   return e.event === 'SubagentStop' && !e.description && !fullText.value
@@ -185,6 +201,17 @@ const isCompact = computed(() => {
 
       <!-- Result as markdown -->
       <div v-if="isResult" class="mt-1.5">
+        <div class="flex items-center gap-2 mb-1">
+          <button
+            class="text-[10px] text-slate-600 hover:text-slate-300 transition-colors cursor-pointer"
+            title="Save as .md"
+            @click="saveResult"
+          >
+            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+            </svg>
+          </button>
+        </div>
         <div
           class="md-result text-xs leading-relaxed bg-slate-950/50 rounded px-3 py-2 max-h-48 overflow-y-auto"
           :class="{ 'max-h-none': expanded }"

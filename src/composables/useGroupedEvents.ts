@@ -1,4 +1,4 @@
-import { computed, type Ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import type { AgentEvent } from './useAgentEvents'
 
 export interface AgentGroup {
@@ -17,6 +17,12 @@ export type TimelineItem =
   | { type: 'event'; event: AgentEvent }
 
 export function useGroupedEvents(events: Ref<AgentEvent[]>) {
+  const dismissedIds = ref(new Set<string>())
+
+  function dismissGroup(id: string) {
+    dismissedIds.value = new Set([...dismissedIds.value, id])
+  }
+
   const timelineItems = computed<TimelineItem[]>(() => {
     const groups = new Map<string, AgentGroup>()
     // First pass: index SubagentStart/Stop by agent_id
@@ -115,13 +121,18 @@ export function useGroupedEvents(events: Ref<AgentEvent[]>) {
       }
     }
 
-    // Collect events that are part of a group
+    // Collect events that are part of a group (including dismissed — to hide them too)
     const groupedEventSet = new Set<AgentEvent>()
     for (const group of groups.values()) {
       if (group.dispatch) groupedEventSet.add(group.dispatch)
       if (group.start) groupedEventSet.add(group.start)
       if (group.stop) groupedEventSet.add(group.stop)
       if (group.result) groupedEventSet.add(group.result)
+    }
+
+    // Remove dismissed groups from rendering
+    for (const id of dismissedIds.value) {
+      groups.delete(id)
     }
 
     // Build timeline: groups appear at the position of their earliest event
@@ -153,5 +164,5 @@ export function useGroupedEvents(events: Ref<AgentEvent[]>) {
     return items.map(i => i.item)
   })
 
-  return { timelineItems }
+  return { timelineItems, dismissGroup }
 }

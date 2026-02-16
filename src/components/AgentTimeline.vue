@@ -8,6 +8,10 @@ const props = defineProps<{
   items: TimelineItem[]
 }>()
 
+const emit = defineEmits<{
+  dismissGroup: [id: string]
+}>()
+
 const container = ref<HTMLElement | null>(null)
 const autoScroll = ref(true)
 
@@ -61,6 +65,7 @@ function onScroll() {
         <AgentGroupCard
           v-if="item.type === 'group'"
           :group="item.group"
+          @dismiss="emit('dismissGroup', $event)"
         />
         <AgentCard
           v-else
