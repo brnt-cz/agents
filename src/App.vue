@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import AgentTimeline from './components/AgentTimeline.vue'
 import SessionSummary from './components/SessionSummary.vue'
+import PixelOffice from './components/PixelOffice.vue'
 import { useAgentEvents } from './composables/useAgentEvents'
 import { useGroupedEvents } from './composables/useGroupedEvents'
+import type { AgentGroup } from './composables/useGroupedEvents'
 
 const {
   filteredEvents,
@@ -17,6 +19,14 @@ const {
 
 const { timelineItems, dismissGroup } = useGroupedEvents(filteredEvents)
 const eventCount = computed(() => filteredEvents.value.length)
+
+const allGroups = computed<AgentGroup[]>(() =>
+  timelineItems.value
+    .filter((item): item is { type: 'group'; group: AgentGroup } => item.type === 'group')
+    .map(item => item.group)
+)
+
+const showOffice = ref(true)
 </script>
 
 <template>
@@ -75,6 +85,18 @@ const eventCount = computed(() => filteredEvents.value.length)
             </select>
           </div>
 
+          <!-- Office toggle -->
+          <button
+            class="inline-flex items-center gap-1.5 text-[11px] border border-transparent rounded-lg px-2.5 py-1.5 transition-all active:scale-95 cursor-pointer"
+            :class="showOffice ? 'text-amber-400 hover:bg-amber-500/10 hover:border-amber-500/20' : 'text-slate-500 hover:bg-slate-700/50 hover:border-slate-700'"
+            @click="showOffice = !showOffice"
+          >
+            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>
+            </svg>
+            Office
+          </button>
+
           <!-- Clear button -->
           <button
             class="inline-flex items-center gap-1.5 text-[11px] text-slate-500 border border-transparent rounded-lg px-2.5 py-1.5 transition-all hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 active:scale-95 cursor-pointer"
@@ -91,6 +113,9 @@ const eventCount = computed(() => filteredEvents.value.length)
 
     <!-- Session Summary -->
     <SessionSummary :events="filteredEvents" />
+
+    <!-- Pixel Art Office -->
+    <PixelOffice v-if="showOffice" :groups="allGroups" />
 
     <!-- Timeline -->
     <main class="flex-1 overflow-hidden p-4">
