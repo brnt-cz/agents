@@ -471,17 +471,12 @@ export function usePixelOffice(
     // Keyboard
     px(ctx, desk.x - 2, dy - 1, 5, 1, '#475569')
 
-    // Chair (in front of desk, on floor)
+    // Chair (always in front of desk, consistent position)
     const cy = dy + 2
-    // Seat
     px(ctx, desk.x - 2, cy, 5, 1, '#334155')
-    // Backrest (if no one sitting)
-    if (!desk.occupied) {
-      px(ctx, desk.x - 2, cy - 2, 5, 2, '#334155')
-      px(ctx, desk.x - 2, cy - 2, 1, 2, '#475569')
-      px(ctx, desk.x + 2, cy - 2, 1, 2, '#475569')
-    }
-    // Chair legs
+    px(ctx, desk.x - 2, cy - 2, 5, 2, '#334155')
+    px(ctx, desk.x - 2, cy - 2, 1, 2, '#475569')
+    px(ctx, desk.x + 2, cy - 2, 1, 2, '#475569')
     px(ctx, desk.x - 1, cy + 1, 1, 2, '#1e293b')
     px(ctx, desk.x + 1, cy + 1, 1, 2, '#1e293b')
   }
@@ -508,7 +503,7 @@ export function usePixelOffice(
         break
       case 'working':
         frame = char.currentFrame === 0 ? TYPE1 : TYPE2
-        y = CHAR_FLOOR_Y + 4 // lower because sitting
+        y = CHAR_FLOOR_Y + 1 // head + torso above desk, arms at desk level
         break
       default:
         frame = STAND
