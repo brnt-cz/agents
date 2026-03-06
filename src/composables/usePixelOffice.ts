@@ -49,16 +49,43 @@ const TARGET_FPS = 10
 // ─── Agent Colors ────────────────────────────────────────────────────
 
 const AGENT_COLORS: Record<string, { body: string; accent: string; label: string }> = {
-  'Explore':                { body: '#38bdf8', accent: '#0ea5e9', label: 'EXP' },
-  'Plan':                   { body: '#fbbf24', accent: '#f59e0b', label: 'PLN' },
-  'Bash':                   { body: '#94a3b8', accent: '#64748b', label: 'BSH' },
-  'general-purpose':        { body: '#818cf8', accent: '#6366f1', label: 'GEN' },
-  'vue3-typescript-expert': { body: '#22d3ee', accent: '#06b6d4', label: 'VUE' },
-  'tailwind-expert':        { body: '#f472b6', accent: '#ec4899', label: 'TW' },
-  'sports-analyst':         { body: '#a78bfa', accent: '#8b5cf6', label: 'SPR' },
-  'nextgen-fullstack-dev':  { body: '#fb923c', accent: '#f97316', label: 'FS' },
-  'creative-web-designer':  { body: '#facc15', accent: '#eab308', label: 'DES' },
-  'evolu-dev-expert':       { body: '#4ade80', accent: '#22c55e', label: 'EVO' },
+  // Core agents
+  'Explore':                            { body: '#38bdf8', accent: '#0ea5e9', label: 'EXP' },
+  'Plan':                               { body: '#fbbf24', accent: '#f59e0b', label: 'PLAN' },
+  'Bash':                               { body: '#94a3b8', accent: '#64748b', label: 'BASH' },
+  'general-purpose':                    { body: '#818cf8', accent: '#6366f1', label: 'GEN' },
+  'claude-code-guide':                  { body: '#60a5fa', accent: '#3b82f6', label: 'DOCS' },
+  'statusline-setup':                   { body: '#a1a1aa', accent: '#71717a', label: 'SET' },
+  // Dev experts
+  'vue3-typescript-expert':             { body: '#22d3ee', accent: '#06b6d4', label: 'VUE' },
+  'tailwind-expert':                    { body: '#f472b6', accent: '#ec4899', label: 'TW' },
+  'nextgen-fullstack-dev':              { body: '#fb923c', accent: '#f97316', label: 'NG' },
+  'creative-web-designer':              { body: '#facc15', accent: '#eab308', label: 'DESIGN' },
+  'evolu-dev-expert':                   { body: '#4ade80', accent: '#22c55e', label: 'EVOLU' },
+  'sports-analyst':                     { body: '#a78bfa', accent: '#8b5cf6', label: 'SPORT' },
+  // OXID toolkit
+  'oxid-claude-toolkit:software-architect':     { body: '#c084fc', accent: '#a855f7', label: 'ARCH' },
+  'oxid-claude-toolkit:oxid-developer':         { body: '#e879f9', accent: '#d946ef', label: 'OXID' },
+  'oxid-claude-toolkit:php-reviewer':           { body: '#f0abfc', accent: '#e879f9', label: 'PHP' },
+  'oxid-claude-toolkit:doctrine-specialist':    { body: '#67e8f9', accent: '#22d3ee', label: 'DBA' },
+  'oxid-claude-toolkit:symfony-specialist':     { body: '#86efac', accent: '#4ade80', label: 'SYM' },
+  'oxid-claude-toolkit:legacy-bridge-specialist': { body: '#fdba74', accent: '#fb923c', label: 'LEG' },
+  'oxid-claude-toolkit:security-reviewer-php':  { body: '#fca5a5', accent: '#f87171', label: 'SEC' },
+  // PR review toolkit
+  'pr-review-toolkit:pr-test-analyzer':         { body: '#5eead4', accent: '#2dd4bf', label: 'TST' },
+  'pr-review-toolkit:type-design-analyzer':     { body: '#7dd3fc', accent: '#38bdf8', label: 'TYPE' },
+  'pr-review-toolkit:code-reviewer':            { body: '#fda4af', accent: '#fb7185', label: 'CR' },
+  'pr-review-toolkit:code-simplifier':          { body: '#d9f99d', accent: '#bef264', label: 'SMPL' },
+  'pr-review-toolkit:silent-failure-hunter':    { body: '#fcd34d', accent: '#fbbf24', label: 'SFH' },
+  'pr-review-toolkit:comment-analyzer':         { body: '#c4b5fd', accent: '#a78bfa', label: 'CMT' },
+  // Superpowers
+  'superpowers:code-reviewer':                  { body: '#fda4af', accent: '#fb7185', label: 'CR' },
+  // Code simplifier
+  'code-simplifier:code-simplifier':            { body: '#d9f99d', accent: '#bef264', label: 'SMPL' },
+  // Plugin dev
+  'plugin-dev:skill-reviewer':                  { body: '#a5b4fc', accent: '#818cf8', label: 'SKILL' },
+  'plugin-dev:plugin-validator':                { body: '#99f6e4', accent: '#5eead4', label: 'PLG' },
+  'plugin-dev:agent-creator':                   { body: '#fde68a', accent: '#fcd34d', label: 'AGC' },
 }
 
 const DEFAULT_COLOR = { body: '#94a3b8', accent: '#64748b', label: '???' }
